@@ -1,0 +1,62 @@
+# 169. Majority Element
+
+**难度**：Easy
+**标签**：Array,Divide and conquer
+
+## 题目
+
+Given an array nums of size n, return the majority element.
+
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+ 
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: 3
+Example 2:
+
+Input: nums = [2,2,1,1,1,2,2]
+Output: 2
+## 思路
+- Boyer-Moore 投票算法
+- 我们只需要两个变量：candidate（当前候选人）和 count（它的血量/票数）。
+
+初始化 count = 0。
+
+遍历数组中的每一个数 x：
+
+如果此时 count == 0，我们就把当前数 x 设为 candidate。
+
+如果 x == candidate，说明遇到了自己人，票数加一：count += 1。
+
+如果 x != candidate，说明遇到了敌人，同归于尽，票数减一：count -= 1。
+
+遍历结束后，剩下的 candidate 就是我们要找的众数。
+
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        candidate = 0
+        count = 0
+        for n in nums:
+            if count == 0:
+                candidate = n
+            if n == candidate:
+                count +=1
+            else:
+                count -=1
+        return candidate
+       
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
