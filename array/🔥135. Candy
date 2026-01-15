@@ -1,6 +1,6 @@
 # 135. Candy
 **难度**：Hard
-**标签**：Array,Greedy,prefix sum
+**标签**：Array,Greedy
 
 ## 题目
 
@@ -21,7 +21,7 @@ Output: 5
 Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
 
   ## 思路
-- 依旧prefix和postfix，从左往右遍历，如果当下的比previous分高，则让当下的糖果变为ratings[i-1]+1
+- 依旧Greedy，从左往右遍历，如果当下的比previous分高，则让当下的糖果变为ratings[i-1]+1
 - 从右往左遍历，如果当下的比前一个（右边的一个）高，注意⚠️：当下糖果变成max(candies[i],ratings[i+1]+1)，因为有可能从左往右的时候的糖果比ratings[i+1]+1高  
 ## 代码（Python）
 
