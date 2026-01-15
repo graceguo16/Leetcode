@@ -1,0 +1,47 @@
+# 135. Candy
+**难度**：Hard
+**标签**：Array,Greedy,prefix sum
+
+## 题目
+
+here are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+Return the minimum number of candies you need to have to distribute the candies to the children.
+
+ 
+
+Example 1:
+
+Input: ratings = [1,0,2]
+Output: 5
+Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+
+  ## 思路
+- 依旧prefix和postfix，从左往右遍历，如果当下的比previous分高，则让当下的糖果变为ratings[i-1]+1
+- 从右往左遍历，如果当下的比前一个（右边的一个）高，注意⚠️：当下糖果变成max(candies[i],ratings[i+1]+1)，因为有可能从左往右的时候的糖果比ratings[i+1]+1高  
+## 代码（Python）
+
+```python
+class Solution(object):
+    def candy(self, ratings):
+        """
+        :type ratings: List[int]
+        :rtype: int
+        """
+        candies = [1]*len(ratings)
+        for i in range(1,len(ratings)):
+            if ratings[i] > ratings[i-1]:
+                candies[i] = candies[i-1]+1
+        for i in range(len(ratings)-2,-1,-1):
+            if ratings[i] >ratings[i+1]:
+                candies[i] = max(candies[i+1]+1,candies[i])
+        return sum(candies)
+  
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
