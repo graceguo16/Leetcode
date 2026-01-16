@@ -1,0 +1,52 @@
+# 58. Length of Last Word
+**难度**：Easy
+**标签**：String
+
+## 题目
+Given a string s consisting of words and spaces, return the length of the last word in the string.
+A word is a maximal substring consisting of non-space characters only.
+
+Example 1:
+
+Input: s = "Hello World"
+Output: 5
+Explanation: The last word is "World" with length 5.
+
+## 思路
+- 把string换成list后return last element
+- 另一种做法：从string的最后一位开始，如果是“”就像前一步，把发现的第一个字母设定为end
+- end = start，start >=0 并且s[start] !=“”的时候继续往左，最后用end-start
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def lengthOfLastWord(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        s = s.split()
+        return len(s[-1])
+
+class Solution:
+    def lengthOfLastWord(self, s: str) -> int:                
+        end = len(s) - 1
+
+        while s[end] == " ":
+            end -= 1
+        
+        start = end
+        while start >= 0 and s[start] != " ":
+            start -= 1
+        
+        return end - start
+
+       
+```
+## 复杂度
+- 时间复杂度：o(1)
+- 空间复杂度：o(1)
+
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
