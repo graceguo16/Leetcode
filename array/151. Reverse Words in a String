@@ -1,0 +1,56 @@
+# 151. Reverse Words in a String
+**难度**：Medium
+**标签**：Two Pointers, String
+
+## 题目
+Given an input string s, reverse the order of the words.
+
+A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
+
+Return a string of the words in reverse order concatenated by a single space.
+
+Note that s may contain leading or trailing spaces or multiple spaces between two words. The returned string should only have a single space separating the words. Do not include any extra spaces.
+
+Example 1:
+
+Input: s = "the sky is blue"
+Output: "blue is sky the"
+
+## 思路
+- 把string换成list
+- 左右指针不超过对方的时候换，最后把列表换成字符串
+- 另一种做法：直接先split，再words = words[::-1] # 反转单词
+        return ' '.join(words)
+
+## 代码（Python）
+
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        # 将字符串拆分为单词，即转换成列表类型
+        words = s.split()
+
+        # 反转单词
+        left, right = 0, len(words) - 1
+        while left < right:
+            words[left], words[right] = words[right], words[left]
+            left += 1
+            right -= 1
+
+        # 将列表转换成字符串
+        return " ".join(words)
+
+class Solution:
+    def reverseWords(self, s):
+        words = s.split() #type(words) --- list
+        words = words[::-1] # 反转单词
+        return ' '.join(words) #列表转换成字符串
+                 
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
+
+- 时间复杂度：o(1)
+- 空间复杂度：o(n)
+
