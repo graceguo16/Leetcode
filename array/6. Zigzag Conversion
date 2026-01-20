@@ -1,0 +1,55 @@
+# 6. Zigzag Conversion
+
+**难度**：Medium
+**标签**：String
+
+## 题目
+
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+ 
+Example 2:
+Input: s = "PAYPALISHIRING", numRows = 4
+Output: "PINALSIGYAHRPI"
+Explanation:
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+
+## 思路
+- 先确定从第一个到第二个字母要跳多少步，跟numRows的关系用数学表达式:increment = (numRows-1)*2
+- 中间会有错开的，多define一个变量i，根据在第几行r的时候来跳，res += s[increment+1 - 2*r]
+- 注意边界：increment+1 - 2*r要小于s的长度，r要在0和最后之间，因为第一行和最后一行不存在错开的situation
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        res = ""
+        if numRows ==1:
+            return s
+        for r in range(numRows):
+            increment = (numRows-1)*2
+            
+            for i in range(r,len(s),increment):
+                res += s[i]
+                if (r > 0 and r < numRows-1 and i + increment - 2*r < len(s)):
+
+                        res += s[i + increment - 2*r]
+        return res
+            
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
