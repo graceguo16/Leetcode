@@ -1,0 +1,43 @@
+# 125. Valid Palindrome
+
+**难度**：Easy
+**标签**：Two pointers, String
+
+## 题目
+
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+
+## 思路
+- 从左和右分别开始，如果不是元音字母则分别+-1
+- 如果lower不相等则return False
+- 每一次循环结束都记得 +-，最后return True
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isPalindrome(self, s):
+        l, r = 0, len(s)-1
+        while l < r:
+            while l < r and not s[l].isalnum():
+                l += 1
+            while l <r and not s[r].isalnum():
+                r -= 1
+            if s[l].lower() != s[r].lower():
+                return False
+            l +=1; r -= 1
+        return True
+    
+   
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
