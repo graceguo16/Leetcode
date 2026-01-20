@@ -1,0 +1,43 @@
+# 28. Find the Index of the First Occurrence in a String
+
+**难度**：Medium
+**标签**：String
+
+## 题目
+
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+Example 1:
+
+Input: haystack = "sadbutsad", needle = "sad"
+Output: 0
+Explanation: "sad" occurs at index 0 and 6.
+The first occurrence is at index 0, so we return 0.
+
+## 思路
+- 从index i到i+len(needle)+1比较，然后记得range是len(haystack)+1 - len(needle),因为比如说例子1就不能从ad开始比较
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def strStr(self, haystack, needle):
+        """
+        :type haystack: str
+        :type needle: str
+        :rtype: int
+        """
+        if needle == "":
+            return 0
+        
+        for i in range(len(haystack) + 1 - len(needle)):
+    # 错误：haystack[i : len(needle) + 1]
+    # 正确：从 i 开始，取长度为 len(needle) 的片段
+            if haystack[i : i + len(needle)] == needle:
+                return i
+        return -1
+            
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
