@@ -1,0 +1,75 @@
+# 209. Minimum Size Subarray Sum
+**标签**：Array,Sliding Window,Prefix Sum
+
+## 题目
+You are given a string s and an array of strings words. All the strings of words are of the same length.
+
+A concatenated string is a string that exactly contains all the strings of any permutation of words concatenated.
+For example, if words = ["ab","cd","ef"], then "abcdef", "abefcd", "cdabef", "cdefab", "efabcd", and "efcdab" are all concatenated strings. "acdbef" is not a concatenated string because it is not the concatenation of any permutation of words.
+Return an array of the starting indices of all the concatenated substrings in s. You can return the answer in any order 
+
+Example 1:
+
+Input: s = "barfoothefoobarman", words = ["foo","bar"]
+
+Output: [0,9]
+
+Explanation:
+
+The substring starting at 0 is "barfoo". It is the concatenation of ["bar","foo"] which is a permutation of words.
+The substring starting at 9 is "foobar". It is the concatenation of ["foo","bar"] which is a permutation of words.
+
+## 思路
+- 建立两个Counter：words_count记录题目给的单词每个出现了多少词；window_count记录s里面出现的word的次数，出现一次就counter+1
+- 当window_count里面某个单词的次数大于了words_count，则让这个left word在window里面的次数-1，l += word_len：扔掉最左边那个碍事的单词，然后把窗口的起始位置挪到下一个单词的开头
+## 困惑点
+- 右指针r(车头 - 探索者)：任务：负责向右移动，每次跳一个 word_len 的距离，切下一个新单词。动作：每切下一个单词，就去 word_counts（目标清单）里查一下。如果这个单词是清单里的，就把它装进 window_counts（当前的购物篮）里。
+- 左指针l (车尾 - 维护者)：任务：负责确保窗口内的单词不多不少、刚好合法。动作：处理“溢出”：如果 $r$ 拿进来的单词让某种单词的数量超过了清单要求，$l$ 就开始往右跳（每次也跳 word_len），把最左边的单词“踢出”窗口，直到数量重新达标。处理“无效单词”：如果 $r$ 遇到了一个清单上压根没有的单词，$l$ 会直接“瞬移”到 $r$ 的当前位置，把之前所有的累积清零，重新开始。
+
+## 代码（Python）
+
+```python
+from collections import Counter
+
+class Solution(object):
+    def findSubstring(self, s, words):
+        if not s or not words: return []
+        
+        word_len = len(words[0])
+        word_num = len(words)
+        word_counts = Counter(words)
+        res = []
+
+        for i in range(word_len):
+            l = i
+            r = i
+            window_counts = Counter()
+            count = 0
+  
+            while r + word_len <= len(s):
+                word = s[r:r+word_len]
+                r+= word_len
+                if word in word_counts:
+                      window_counts[word]+=1
+                      count +=1
+            while window_counts[word] > word_counts[word]:
+                      left_word = s[l,l+word_len]
+                      window_counts[left_word] -=1
+                      count -=1
+                      l += word_len
+
+            if count == word_num:
+                        res.append(l)
+                
+                else:
+                    # 修改 4: 遇到完全不认识的单词，清空当前窗口，l 直接跳到 r
+                    window_counts.clear()
+                    count = 0
+                    l = r
+                    
+        return res
+        
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
