@@ -1,0 +1,42 @@
+# 11. Container With Most Water
+**难度**：Medium
+**标签**：Array,Two Pointers, Greedy
+
+## 题目
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+Return the maximum amount of water a container can store.
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+## 思路
+- 和接雨水一样先考虑面积怎么求:max(area,min(height[left],height[right])*(right-left)
+- 怎么移动？如果l小于r，则l+1,vice versa
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        maxarea = 0
+        left = 0
+        right = len(height)-1
+
+        while left < right:
+            maxarea = max(maxarea, (right - left)*min(height[left],height[right]))
+
+            if height[left] < height[right]:
+                left +=1
+            else:
+                right -=1
+        return maxarea
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
