@@ -1,0 +1,48 @@
+# 209. Minimum Size Subarray Sum
+**标签**：Array,Sliding Window,Prefix Sum
+
+## 题目
+Given an array of positive integers nums and a positive integer target, return the minimal length of a subarray whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+
+Example 1:
+
+Input: target = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+
+## 思路
+- 注意⚠️这种return Sub或者是index的不能sort，因为这样会改变原数组
+- 就还是two pointer，改变滑动window的大小：如果还没到target，则继续走，sum继续加，len也
+- 如果超了，则更新结果：立即计算当前窗口长度 right - left + 1，并更新全局最小值 min_len。
+- 优化窗口：尝试通过移动左指针 left 来“缩减”窗口。减去左侧元素的值，left 右移。
+- 重复检查：只要缩减后的 cur_sum 依然满足条件，就重复上述更新和优化的过程。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def minSubArrayLen(self, target, nums):
+        """
+        :type target: int
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        left = 0
+        cur_sum = 0
+        min_len = float('inf')
+
+        for right in range(n):
+            cur_sum += nums[right]
+
+            while cur_sum >= target:
+                min_len = min(min_len, right-left +1)
+                cur_sum -= nums[left]
+                left +=1
+        return min_len if min_len != float('inf') else 0
+   
+        
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
