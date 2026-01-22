@@ -1,0 +1,70 @@
+# 70. Minimum Window Substring
+**难度**：Hard
+**标签**：Hash Table, String, Sliding Window
+
+## 题目
+Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+
+The testcases will be generated such that the answer is unique.
+
+
+Example 1:
+
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+
+## 思路
+- 和word concatenation一样，需要dict来记录已有和重复的count：如果已有的变成0证明找完了，变量formed要+1，这期间维护right index
+- 如果formed所有都变成0，则移动左边的window：如果右移发现到了不是我们care的单词且重复次数为0，则要formed-1，这个单词要加1
+
+## 代码（Python）
+
+```python
+from collections import defaultdict
+class Solution(object):
+    def minWindow(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        d = defaultdict[]
+        for char in t:
+            d[char] +=1
+        formed = 0
+        total = len(d)
+        l = 0
+        r = 0
+        subl = 0
+        subr = 0
+        len_ans = float('inf')
+
+        while r < len(s):
+            char = s[r]
+
+            if char in d:
+                d[char] -=1
+                if d[char] == 0:
+                    formed +=1
+
+            while l <=r and formed == total:
+                cur_len = r -l +1
+                if cur_len < len_ans:
+                    len_ans = cur_len
+                    subl = l
+                    subr = r+1
+                char = s[l]
+                if char in d:
+                    if d[char] == 0:
+                        formed -=1
+                    d[char] +=1
+                l+=1
+            r+=1
+        return ""if len_ans == float('inf')else s[subl,subr]
+        
+        
+```
+## 复杂度
+- 时间复杂度：O(M + N)
+- 空间复杂度：o(k) k:是字符集的大小：字典 d 存储的是 t 中出现的去重字符。
