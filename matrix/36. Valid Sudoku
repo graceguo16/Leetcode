@@ -1,1 +1,73 @@
+# 36. Valid Sudoku
+**难度**：Medium
+**标签**：Array,Hash Table,Matrix
 
+## 题目
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Note:
+
+A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+Only the filled cells need to be validated according to the mentioned rules.
+
+Input: board = 
+[["5","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+Output: true
+
+## 思路
+- 使用hash table（dict）来记录每行没列都有什么，3*3的小matrix则用[r//3,c//3]来当key
+- 检查行列和九宫格是否重复：if (val in rows[r] or val in cols[c] or val in squares[(r // 3, c // 3)]):
+- 没重复则添加进对应的记录本                  
+
+## 代码（Python）
+
+```python
+import collections
+
+class Solution(object): # 加上 object 兼容性更好
+    def isValidSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: bool
+        """
+        # 使用 collections.defaultdict(set) 自动创建集合，避免 KeyError
+        cols = collections.defaultdict(set)
+        rows = collections.defaultdict(set)
+        squares = collections.defaultdict(set)
+
+        for r in range(9):
+            for c in range(9):
+                val = board[r][c]
+                
+                # 1. 如果是空格则跳过
+                if val == ".":
+                    continue
+                
+                # 2. 检查行列和九宫格是否重复
+                # 注意：squares 的 Key 必须是整数对，所以用 // 3
+                if (val in rows[r] or 
+                    val in cols[c] or 
+                    val in squares[(r // 3, c // 3)]):
+                    return False
+                
+                # 3. 没出现过则添加进对应的记录本
+                rows[r].add(val)
+                cols[c].add(val)
+                squares[(r // 3, c // 3)].add(val)
+
+        return True
+```
+## 复杂度
+- 时间复杂度：o(1)/o(81)
+- 空间复杂度：o(1)/o(81)
