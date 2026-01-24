@@ -1,0 +1,58 @@
+# 48. Rotate Image
+**难度**：Medium
+**标签**：Array,Math,Matrix
+
+## 题目
+You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
+
+You have to rotate the image in-place, which means you have to modify the input 2D matrix directly. DO NOT allocate another 2D matrix and do the rotation
+
+Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [[7,4,1],[8,5,2],[9,6,3]]
+
+## 思路
+- 从外向内旋转，发现如果从左到右从上到下处理会丢掉temp，所以trick：先把topleft存下来，然后从左下角开始rotate
+- 注意变量i代表外层到内层的变化
+- 拿出 左上 (存进 temp)
+
+把 左下 塞进 左上
+
+把 右下 塞进 左下
+
+把 右上 塞进 右下
+
+把 temp (左上) 塞进 右上
+- 核心原则： 你先掏空哪一个角，你就得找它的“上家”来填这个坑。只要顺序闭环，结果就是正确的。
+           
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def rotate(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: None Do not return anything, modify matrix in-place instead.
+        """
+        l = 0 
+        r = len(matrix)-1
+
+        while l < r:#中心点旋转后坐标不变，不需要处理，所以不需要小于等于
+            for i in range(r-l):
+                top,bottom = l, r
+
+                topleft = matrix[top][l+i]
+
+                matrix[topleft][l+i] = matrix[bottom-i][l] #左下到左上
+
+                matrix[bottom-i][l] = matrix[bottom][r-i] #右下到左下
+
+                matrix[bottom][r-i] = matrix[top+i][r] #右上到右下
+
+                matrix[top+i][r] = topleft #左上到右上
+            r -=1
+            l +=1    
+```
+## 复杂度
+- 时间复杂度：o(n^2)
+- 空间复杂度：o(1)
