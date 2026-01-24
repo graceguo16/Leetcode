@@ -1,0 +1,61 @@
+# 78. Set Matrix Zeroes
+**难度**：Medium
+**标签**：Array,Hash Table,Matrix
+
+## 题目
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+
+You must do it in place.
+
+Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+Output: [[1,0,1],[0,0,0],[1,0,1]]
+
+## 思路
+- 看见in place，联想到原地标记法
+- 先记录第一行，然后遍历看是否有0，有的话就记录
+- 根据标记0（跳过第一行第一列）的位置来改变
+- 最后处理第一行
+- Q：为什么改变第一行的数不会出乱子？第一行已经提前“备份”了：在代码最开始，我们用 rowZero 这个变量记录了第一行原本有没有 0。这意味着，即使后面我们把第一行改得面目全非，我们也知道最后该不该把第一行全变成 0。第一行只作为“列”的开关：matrix[0][c] = 0 的意思是：“第 c 列最终都要变成 0”。由于我们是从左到右、从上到下遍历的，当我们在处理第 $r$ 行并修改 matrix[0][c] 时，第一行原本在该位置的值已经没用了（因为我们已经检查过第一行了）。
+           
+## 代码（Python）
+
+```python
+class Solution(object):
+    def setZeroes(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: None Do not return anything, modify matrix in-place instead.
+        """
+        ROWS = len(matrix)
+        COLS = len(matrix[0])
+
+        rowZero = 0
+
+        for i in range(ROWS):
+            for c in range(COLS):
+                if matrix[r][c] == 0:
+                    matrix[0][c] = 0 #标记列
+                    if r > 0:
+                        matrix[r][0] = 0 #标记行
+                    else:
+                        rowZero = True
+
+        # 根据标记来放0（跳过第一行第一列）
+        for r in range(1, ROWS):
+            for c in range(1,COLS):
+                if matrix[0][c] == 0 or matrix[r][0] == 0:
+                    matrix[r][c] = 0
+        # 处理第一列
+        if matrix[0][0] == 0:
+            for r in range(ROWS):
+                matrix[r][0] = 0
+                
+        # 处理第一行
+        if rowZero:
+            for c in range(COLS):
+                matrix[0][c] = 0
+        
+```
+## 复杂度
+- 时间复杂度：o(m*n)
+- 空间复杂度：o(1)
