@@ -1,0 +1,64 @@
+# 290. Word Pattern
+**难度**：Easy
+**标签**：Hash Table,String
+
+## 题目
+Given a pattern and a string s, find if s follows the same pattern.
+
+Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in s. Specifically:
+
+Each letter in pattern maps to exactly one unique word in s.
+Each unique word in s maps to exactly one letter in pattern.
+No two letters map to the same word, and no two words map to the same letter.
+ 
+Example 1:
+
+Input: pattern = "abba", s = "dog cat cat dog"
+
+Output: true
+
+Explanation:
+
+The bijection can be established as:
+
+'a' maps to "dog".
+'b' maps to "cat".
+
+## 思路
+- 和上一题完全一样，只是先把s split成words，其他步骤一模一样
+- 用dicts来记录，让s作为dicts的key，t作为value
+- 如果dicts s对应的value不等于t，则return false
+- else：如果key不在dicts里面，如果b是value，则return fasle
+
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def wordPattern(self, pattern, s):
+        """
+        :type pattern: str
+        :type s: str
+        :rtype: bool
+        """
+        words = s.split()
+        dicts = {}
+        if len(pattern) != len(words):
+            return False
+
+        for i in range(len(pattern)):
+            a = pattern[i]
+            b = words[i]
+            if a in dicts:
+                if dicts[a] != b:
+                    return False
+            else:
+                if b in dicts.values():
+                    return False
+                dicts[a] = b
+        return True
+            
+```
+## 复杂度
+- 时间复杂度：o(n^2)时间花在dicts.values()，这个是o(n),然后前面有个for循环
+- 空间复杂度：o(m)
