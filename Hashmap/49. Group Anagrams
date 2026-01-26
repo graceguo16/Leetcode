@@ -1,0 +1,64 @@
+# 242. Valid Anagram
+**难度**：Medium
+**标签**：Array, Hash Table,String,Sorting
+
+## 题目
+Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+
+Example 1:
+
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+Explanation:
+
+There is no string in strs that can be rearranged to form "bat".
+The strings "nat" and "tan" are anagrams as they can be rearranged to form each other.
+The strings "ate", "eat", and "tea" are anagrams as they can be rearranged to form each other.
+
+## 思路
+- 用defaultdict(list)来做
+- 让strs里的s.sort做key，然后key对应的value就是s
+- eg：第一轮循环：处理 "eat"
+特征提取：执行 sorted("eat") 得到 ['a', 'e', 't']。
+
+转为 Key：执行 "".join(...) 得到字符串 "aet"。
+
+放入字典：执行 res["aet"].append("eat")。
+
+幕后动作：defaultdict 发现 "aet" 这个 Key 还不存在，于是自动创建了一个空列表 []，然后把 "eat" 塞进去。
+
+当前字典状态：{"aet": ["eat"]}
+
+第二轮循环：处理 "tea"
+特征提取：执行 sorted("tea") 得到 ['a', 'e', 't']。
+
+转为 Key：得到 "aet"。
+
+放入字典：执行 res["aet"].append("tea")。
+
+幕后动作：defaultdict 发现 "aet" 已经存在了，于是直接在它后面的列表里追加。
+
+当前字典状态：{"aet": ["eat", "tea"]}
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        ans = defaultdict(list)
+        for s in strs:
+            key = "".join(sorted(s))
+            ans[key].append(s)
+
+        return list(ans.values())
+            
+```
+## 复杂度
+- 时间复杂度：o(n*klogk) n是单词总数，k是单词最大长度。每个单词都要排序。
+- 空间复杂度：o(n*k) 需要把所有的单词都存进字典里，总字符量是n*k。
