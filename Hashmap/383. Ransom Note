@@ -1,0 +1,45 @@
+# 383. Ransom Note
+**难度**：Easy
+**标签**：Hash Table,String,Counting
+
+## 题目
+Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
+
+Each letter in magazine can only be used once in ransomNote.
+
+Example 1:
+
+Input: ransomNote = "a", magazine = "b"
+Output: false
+
+## 思路
+- 用counter函数统计magazine里面的字母和个数
+- 遍历ransomNote，如果char在magazine里的个数小于等于0，则证明不能构成 return false
+- else: Counts[char] -=1，最终return True
+
+
+
+## 代码（Python）
+
+```python
+import collections
+class Solution(object):
+    def canConstruct(self, ransomNote, magazine):
+        """
+        :type ransomNote: str
+        :type magazine: str
+        :rtype: bool
+        """
+        counts = collections.Counter(magazine)
+
+        for char in ransomNote:
+            if counts[char] <=0:
+                return False
+            else:
+                counts[char]-=1
+        return True
+        
+```
+## 复杂度
+- 时间复杂度：o(m+n)遍历ransomNote和magazine分别的长度
+- 空间复杂度：o(1)
