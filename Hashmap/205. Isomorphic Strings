@@ -1,0 +1,60 @@
+# 205. Isomorphic Strings
+**难度**：Easy
+**标签**：Hash Table,String
+
+## 题目
+Given two strings s and t, determine if they are isomorphic.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+Example 1:
+
+Input: s = "egg", t = "add"
+
+Output: true
+
+Explanation:
+
+The strings s and t can be made identical by:
+
+Mapping 'e' to 'a'.
+Mapping 'g' to 'd'.
+
+## 思路
+- 用dicts来记录，让s作为dicts的key，t作为value
+- 如果dicts s对应的value不等于t，则return false
+- else：如果key不在dicts里面，如果b是value，则return fasle
+
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if len(s) != len(t):
+            return False
+
+        dicts = {}
+
+        for i in range(len(s)):
+            a = s[i]
+            b = t[i]
+            if a in dicts:
+                if dicts[a] != b:
+                    return False
+            else:
+                if b in dicts.values():
+                    return False
+                dicts[a] = b
+        return True
+```
+## 复杂度
+- 时间复杂度：o(n^2)
+- 空间复杂度：o(1)
