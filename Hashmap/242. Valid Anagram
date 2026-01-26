@@ -1,0 +1,47 @@
+# 242. Valid Anagram
+**难度**：Easy
+**标签**：Hash Table,String,Sorting
+
+## 题目
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+Example 1:
+
+Input: s = "anagram", t = "nagaram"
+
+Output: true
+
+## 思路
+- 用defaultdict(int)来做
+- 先遍历s里面的char然后统计数量
+- 再遍历t里面的char然后相对的char-1，如果发现char数量<0, 则return False
+- 跳出循环最终return True
+
+## 代码（Python）
+
+```python
+import collections
+class Solution(object):
+    def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if len(s) != len(t):
+            return False
+            
+        counts = collections.defaultdict(int)
+        for char in s:
+            counts[char]+=1
+        
+        for char in t:
+            counts[char] -=1
+            if counts[char] < 0:
+                return False
+        return True
+            
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(1)
