@@ -1,0 +1,39 @@
+# 219. Contains Duplicate II
+**难度**：Easy
+**标签**：Array,Hash Table,Sliding Window
+
+## 题目
+Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
+Example 1:
+
+Input: nums = [1,2,3,1], k = 3
+Output: true
+
+
+## 思路
+- 用dicts来记录，nums作为key，index作为value
+- 检查nums是否出现在dicts里面，如果出现的话，看i-last_seen[nums]是否小于k
+
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def containsNearbyDuplicate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: bool
+        """
+        last_seen = {}
+        for i,num in enumerate(nums):
+            if num in last_seen:
+                if i - last_seen[num] <= k:
+                    return True
+            last_seen[num] = i
+        return False
+    
+```
+## 复杂度
+- 时间复杂度：o(n)只遍历了一遍数组，哈希表的存取是O(1)
+- 空间复杂度：o(n)
