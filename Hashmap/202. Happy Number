@@ -1,0 +1,80 @@
+# 202. Happy Number
+**难度**：Easy
+**标签**：Hash Table, Math, Two Pointers
+
+## 题目
+Write an algorithm to determine if a number n is happy.
+
+A happy number is a number defined by the following process:
+
+Starting with any positive integer, replace the number by the sum of the squares of its digits.
+Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+Those numbers for which this process ends in 1 are happy.
+Return true if n is a happy number, and false if not.
+
+Example 1:
+
+Input: n = 19
+Output: true
+Explanation:
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+Example 2:
+
+Input: n = 2
+Output: false
+
+## 思路
+- 会发现如果不是快乐数，则一直平方会进入循环，会得到previous得到的数
+- 如何计算：n = sum([int(i) ** 2 for i in str(n)])
+- 假设 n = 19：str(n)：将数字 19 变成字符串 "19"。原因：数字本身不能直接迭代，变成字符串后，我们可以像处理列表一样一个一个读取字符 '1' 和 '9'。for i in str(n)：这是一个循环，i 会先后等于 '1' 和 '9'。int(i) ** 2：把字符 '1' 转回整数 1，然后计算 $1^2 = 1$。把字符 '9' 转回整数 9，然后计算 $9^2 = 81$。结果形成了一个临时的列表：[1, 81]。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        hset = ()
+        while n != 1:
+            if n in hset:
+                return False
+                hset.add(n)
+                n = sum([int(i) ** 2 for i in str(n)])
+        else:
+            return True
+```
+
+```python
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        visit = set()
+        
+        while n not in visit:
+            visit.add(n)
+            # 注意：这里必须用 self. 来调用类里面的另一个函数
+            n = self.sumOfSquares(n)
+            
+            if n == 1:
+                return True
+        
+        return False
+
+    # 关键点：这个 def 必须和上面的 def 对齐
+    def sumOfSquares(self, n: int) -> int:
+        output = 0
+        while n:
+            digit = n % 10
+            output += digit ** 2
+            n = n // 10
+        return output
+        
+```
+## 复杂度
+- 时间复杂度：o(计算步数*logN)
+- 空间复杂度：o(计算步数*logN)
