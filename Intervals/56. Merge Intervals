@@ -40,5 +40,5 @@ class Solution(object):
         return output
 ```
 ## 复杂度
-- 时间复杂度：o(n)
+- 时间复杂度：o(nlogn)排序
 - 空间复杂度：o(n)
