@@ -1,0 +1,44 @@
+# 56.Merge Intervals
+**难度**：Medium
+**标签**：Array,Sorting
+
+## 题目
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+
+Example 1:
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+## 思路
+- 先把intervals按照第一个index的数sort
+- 如果output最后一个list的最后一个数比intervals的start（第一个数）大，证明重叠，则output新的end是max(end,lastEnd)
+
+
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def merge(self, intervals):
+        """
+        :type intervals: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        intervals.sort(key = lambda i: i[0])
+
+        output = [intervals[0]]
+        
+        for start,end in intervals[1:]:
+            lastEnd = output[-1][1]
+            if start <= lastEnd:
+                output[-1][1] = max(end,lastEnd)
+            else:
+                output.append([start,end])
+        return output
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
