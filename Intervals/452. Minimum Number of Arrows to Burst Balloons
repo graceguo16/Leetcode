@@ -1,0 +1,72 @@
+# 452. Minimum Number of Arrows to Burst Balloons
+**难度**：Medium
+**标签**：Array,Greedy,Sorting
+
+## 题目
+There are some spherical balloons taped onto a flat wall that represents the XY-plane. The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend. You do not know the exact y-coordinates of the balloons.
+
+Arrows can be shot up directly vertically (in the positive y-direction) from different points along the x-axis. A balloon with xstart and xend is burst by an arrow shot at x if xstart <= x <= xend. There is no limit to the number of arrows that can be shot. A shot arrow keeps traveling up infinitely, bursting any balloons in its path.
+
+Given the array points, return the minimum number of arrows that must be shot to burst all balloons.
+
+ 
+Example 1:
+
+Input: points = [[10,16],[2,8],[1,6],[7,12]]
+Output: 2
+Explanation: The balloons can be burst by 2 arrows:
+- Shoot an arrow at x = 6, bursting the balloons [2,8] and [1,6].
+- Shoot an arrow at x = 11, bursting the balloons [10,16] and [7,12].
+
+## 思路
+- 按照points的第二个数sort（因为贪心就是说这支箭最晚在必须射破的气球快要结束（x_end）的时候射。
+- 如果当前气球的开始位置大于箭的位置，说明这支箭够不着，则让arrow+1
+- 第一支箭射在第一个气球结束的位置
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def findMinArrowShots(self, points):
+        """
+        :type points: List[List[int]]
+        :rtype: int
+        """
+        if not points: return 0
+        
+        # 1. 按照结束位置排序
+        points.sort(key=lambda x: x[1])
+        
+        arrows = 1
+        # 第一支箭射在第一个气球的结束位置
+        first_arrow_pos = points[0][1]
+        
+        for i in range(1, len(points)):
+            # 如果当前气球的开始位置大于箭的位置，说明这支箭够不着
+            if points[i][0] > first_arrow_pos:
+                arrows += 1
+                # 更新新箭的位置，定在当前气球的结束位置
+                first_arrow_pos = points[i][1]
+        
+        return arrows
+```
+## 复杂度
+- 时间复杂度：o(nlogn)因为排序
+- 空间复杂度：o(n)
+
+## 思考
+并集 (Union) —— “合并与覆盖”
+
+关键词：Combine（合并）、Cover（覆盖）、Total length（总长度）。
+
+直观理解：要把散落的零件“焊”在一起。只要有重叠，它们就变成了一个更大的整体。
+
+典型题目：56. Merge Intervals（合并区间）。
+
+交集 (Intersection) —— “寻找共同点/冲突”
+
+关键词：Minimum arrows（最少数量）、Common area（共同区域）、Conflict（冲突）、Overlap（重叠数）。
+
+直观理解：要找“大家都碰头”的那个点。
+
+典型题目：452. 射气球、无重叠区间。
