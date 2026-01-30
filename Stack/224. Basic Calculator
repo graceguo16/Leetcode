@@ -1,0 +1,82 @@
+# 224. Basic Calculator
+**难度**：Hard
+**标签**：Math,String,Stack,Recursion
+
+## 题目
+
+Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the result of the evaluation.
+
+Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
+
+Example 1:
+
+Input: s = "1 + 1"
+Output: 2
+
+## 思路
+- 难点在处理括号，需要一个sign来记录当前符号是什么
+- 用一个例子“肉眼观察”：2 - (1 + 3)
+遇到 2 -： 此时 res = 2, sign = -1。
+
+遇到 (：
+
+stack 存入 2，再存入 -1。现在的 stack = [2, -1]。
+
+res 归 0，sign 归 1。
+
+在括号里算 1 + 3： 算完后括号内的 res = 4。
+
+遇到 )：
+
+第一个 pop()：拿到 -1。res = 4 * (-1) = -4。
+
+第二个 pop()：拿到 2。res = -4 + 2 = -2。
+
+结果： -2。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def calculate(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        stack = []
+        num = 0
+        res = 0
+        sign = 1
+
+        for char in s:
+            if char.isdigit():
+                num = 10*num+int(char)
+            elif char == "+":
+                res += num*sign
+                num = 0
+                sign = 1
+            elif char == "-":
+                res += num*sign
+                num = 0
+                sign = -1
+            elif char == "(":
+                stack.append(res)
+                stack.append(sign)
+                sign =1
+                res = 0
+            elif char == ")":
+                res += sign*num
+                res *= stack.pop()
+                res += stack.pop()
+                num = 0
+        return res + num*sign
+                
+```
+## 思考
+- 为什么要 return res + num * sign？
+这是为了处理那些没被括号包围的最后一段数字
+
+
+## 复杂度
+- 时间复杂度：0(n)
+- 空间复杂度: 0(n)
