@@ -1,0 +1,65 @@
+# 71. Simplify Path
+**难度**：Medium
+**标签**：Stack,Design
+
+## 题目
+
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+Implement the MinStack class:
+
+MinStack() initializes the stack object.
+void push(int val) pushes the element val onto the stack.
+void pop() removes the element on the top of the stack.
+int top() gets the top element of the stack.
+int getMin() retrieves the minimum element in the stack.
+You must implement a solution with O(1) time complexity for each function.
+
+## 思路
+- 最需要注意的是push：要求O(1)的话，需要一个正常stack和min，如果min没有，则存入
+- 如果有min，则cur等于min当前的最后一个数，然后比较val和cur_min
+
+## 代码（Python）
+
+```python
+class MinStack(object):
+
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+        
+
+    def push(self, val):
+        """
+        :type val: int
+        :rtype: None
+        """
+
+        self.stack.append(val)
+        if not self.min_stack:
+            self.min_stack.append(val)
+        else:
+            current_min = self.min_stack[-1]
+            self.min_stack.append(min(val, current_min))
+
+    def pop(self):
+        """
+        :rtype: None
+        """
+        self.stack.pop()
+        self.min_stack.pop()
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        return self.stack[-1]
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        return self.min_stack[-1]
+
+```
+
