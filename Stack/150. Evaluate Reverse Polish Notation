@@ -1,0 +1,59 @@
+# 150. Evaluate Reverse Polish Notation
+**难度**：Medium
+**标签**：Array, Math,Stack
+
+## 题目
+
+You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
+
+Evaluate the expression. Return an integer that represents the value of the expression.
+
+Note that:
+
+The valid operators are '+', '-', '*', and '/'.
+Each operand may be an integer or another expression.
+The division between two integers always truncates toward zero.
+There will not be any division by zero.
+The input represents a valid arithmetic expression in a reverse polish notation.
+The answer and all the intermediate calculations can be represented in a 32-bit integer.
+
+## 思路
+- 遇到加减乘除就弹出两个数（注意：先弹出右边再弹出左边）
+- 根据相应的加减乘除append计算量（注意：除法向0取整要变成nt(float(a) / b)）
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def evalRPN(self, tokens):
+        """
+        :type tokens: List[str]
+        :rtype: int
+        """
+        stack = []
+        
+        for t in tokens:
+            if t in "+-*/":
+                # 遇到符号，弹出两个数
+                b = stack.pop() # 先弹出来的是右边的
+                a = stack.pop() # 后弹出来的是左边的
+                
+                if t == '+':
+                    stack.append(a + b)
+                elif t == '-':
+                    stack.append(a - b)
+                elif t == '*':
+                    stack.append(a * b)
+                elif t == '/':
+                    # Python 的 // 是向下取整，这里需要向零取整
+                    # 使用 float 相除再转 int 是最简单的向零取整方法
+                    stack.append(int(float(a) / b))
+            else:
+                # 遇到数字，直接压入栈
+                stack.append(int(t))
+                
+        return stack[0]
+```
+## 复杂度
+- 时间复杂度：0(n)
+- 空间复杂度: 0(n)
