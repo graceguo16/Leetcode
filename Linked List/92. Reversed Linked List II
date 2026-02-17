@@ -1,0 +1,51 @@
+# 92. Reversed Linked List II
+**难度**：Medium
+**标签**：principal, Linked List, Math, Recursion
+
+## 题目
+Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.
+
+Input: head = [1,2,3,4,5], left = 2, right = 4
+Output: [1,4,3,2,5]
+
+## 思路
+- 让 pre 指针先走 left - 1 步。此时，pre 停在待翻转区域的前一个位置
+- 定义 curr 指向 pre.next。这个 curr 节点非常特殊，它原本是反转区域的第一个节点，但随着翻转的进行，它会不断向后移，最终变成翻转区域的最后一个节点
+- 在 right - left 次循环中：1.取出目标节点 (nxt)：把 curr 后面的那个节点拎出来。2.让 curr 直接跳过 nxt，指向更后面的节点（维持链表不断开）。 3. 将 nxt 插入到 pre 和 pre.next 之间。
+## 代码（Python）
+
+```python
+class Solution(object):
+    def reverseBetween(self, head, left, right):
+        """
+        :type head: Optional[ListNode]
+        :type left: int
+        :type right: int
+        :rtype: Optional[ListNode]
+        """
+        dummy = ListNode(0)
+        dummy.next = head
+        pre = dummy
+    
+    # 2. pre 走 left-1 步，到达翻转段的前一个节点
+        for _ in range(left - 1):
+            pre = pre.next
+        
+    # 3. 开始翻转
+        curr = pre.next # curr 始终是那个“原本在 left 位置”的节点
+        for _ in range(right - left):
+            nxt = curr.next # 拿出要往前插的那个点
+        
+        # 这一步最关键，就像在织毛衣，把节点一个一个提到前面
+            curr.next = nxt.next # curr 指向后后的点
+            nxt.next = pre.next  # nxt 指向当前的头部
+            pre.next = nxt       # 把 nxt 挂在 pre 后面
+        
+        return dummy.next
+
+```
+
+```
+## 复杂度
+- 时间复杂度：O(N)list的长度
+- 空间复杂度：O(1)
