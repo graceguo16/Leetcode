@@ -1,0 +1,56 @@
+# 86. Partition List
+**难度**：Medium
+**标签**：Linked List, Two Pointers
+
+## 题目
+Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+Input: head = [1,4,3,2,5,2], x = 3
+Output: [1,2,2,4,3,5]
+
+## 思路
+- 用两个小linkedlist，一个small一个large
+- 如果cur.val < x: small.next = cur
+- large同理，最后让large.next = none,然后small.next = large_dummy.next（small尾巴链接large 头）
+
+## 代码
+```python
+class Solution(object):
+    def partition(self, head, x):
+        """
+        :type head: Optional[ListNode]
+        :type x: int
+        :rtype: Optional[ListNode]
+        """
+        small_dummy = ListNode(0)
+        big_dummy = ListNode(0)
+        
+        # 2. 创建两个指针用于构建链表
+        small = small_dummy
+        big = big_dummy
+        
+        # 3. 遍历原链表，进行分流
+        curr = head
+        while curr:
+            if curr.val < x:
+                small.next = curr
+                small = small.next
+            else:
+                big.next = curr
+                big = big.next
+            curr = curr.next
+        
+        # 4. 最关键的一步：切断“大数链表”末尾的旧连接，防止形成环
+        big.next = None
+        
+        # 5. 把两个链表首尾相连
+        small.next = big_dummy.next
+        
+        return small_dummy.next
+```
+
+```
+## 复杂度
+- 时间复杂度：O(M)因为要遍历整个list
+- 空间复杂度：O(1)
