@@ -1,0 +1,43 @@
+# 19. Remove Nth Node From End of List
+**难度**：Medium
+**标签**：Linked List, Two Pointers
+
+## 题目
+Given the head of a linked list, remove the nth node from the end of the list and return its head.
+
+Input: head = [1,2,3,4,5], n = 2
+Output: [1,2,3,5]
+
+## 思路
+- 建立距离差（快指针先行）：让 fast 指针先向前走 n 步。此时，fast 和 slow 之间的距离正好是 $n$ 个节点。
+- 处理边界情况（删除头节点）：如果在走完 $n$ 步后 fast 变成了 None，说明链表的总长度正好等于 $n$。这意味着要删除的是第一个节点（头节点），所以直接返回 head.next。
+- 同步移动（保持间距）：接下来，同时移动 fast 和 slow。当 fast.next 变成 None（即 fast 移动到了最后一个节点）时停止。
+- 定位与删除：由于两者始终保持 $n$ 的距离，当 fast 在最后一个节点时，slow 恰好停在待删除节点的前一个位置。此时执行 slow.next = slow.next.next 即可跳过（删除）目标节点。
+## 代码（Python）
+
+```python
+class Solution(object):
+    def removeNthFromEnd(self, head, n):
+        """
+        :type head: Optional[ListNode]
+        :type n: int
+        :rtype: Optional[ListNode]
+        """
+        fast = head
+        slow = head
+        for _ in range(n):
+            fast = fast.next
+            if not fast:
+                return head.next
+        while fast.next:
+            fast =fast.next
+            slow = slow.next
+        slow.next = slow.next.next
+        return head
+
+```
+
+```
+## 复杂度
+- 时间复杂度：O(M)因为要遍历整个list
+- 空间复杂度：O(1)
