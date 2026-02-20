@@ -1,0 +1,91 @@
+# 19. Remove Nth Node From End of List
+**难度**：Medium
+**标签**：Linked List, Hash Table, Design, Doubly-Linked List
+
+## 题目
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+## 代码（Python）
+
+```python
+class Node:
+    def __init__(self, key=0, value=0):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+
+class LRUCache(object):
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = {} # HashMap: key -> Node
+        # 建立双向链表的哨兵节点
+        self.head = Node()
+        self.tail = Node()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def get(self, key):
+        if key not in self.cache:
+            return -1
+        # 如果存在，先通过哈希表定位节点
+        node = self.cache[key]
+        # 因为被访问了，要把此节点移到链表头部
+        self._move_to_head(node)
+        return node.value
+
+    def put(self, key, value):
+        if key in self.cache:
+            # 修改值，并移到头部
+            node = self.cache[key]
+            node.value = value
+            self._move_to_head(node)
+        else:
+            # 新增节点
+            new_node = Node(key, value)
+            self.cache[key] = new_node
+            self._add_to_head(new_node)
+            # 如果超容，删除链表尾部（最久没用）
+            if len(self.cache) > self.capacity:
+                removed = self._remove_tail()
+                del self.cache[removed.key]
+
+    # --- 以下是链表操作的辅助函数 ---
+    
+    def _remove_node(self, node):
+        # 把自己从前后连接中切断
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+    def _add_to_head(self, node):
+        # 插入到 head 后面
+        node.prev = self.head
+        node.next = self.head.next
+        self.head.next.prev = node
+        self.head.next = node
+
+    def _move_to_head(self, node):
+        self._remove_node(node)
+        self._add_to_head(node)
+
+    def _remove_tail(self):
+        # 删掉 tail 之前的那个节点
+        node = self.tail.prev
+        self._remove_node(node)
+        return node
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+
+```
+
+
