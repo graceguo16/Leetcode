@@ -1,0 +1,45 @@
+# 82. Remove Duplicates from Sorted List II
+**难度**：Medium
+**标签**：Linked List, Two Pointers
+
+## 题目
+Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
+Input: head = [1,2,3,3,4,4,5]
+Output: [1,2,5]
+
+## 思路
+- pre和cur，cur遍历如果发现cur.val = cur.next.val，则让x等于cur.val然后一直走，直到不一样，跳出循环，让pre.next = cur
+## 代码
+```python
+class Solution(object):
+    def deleteDuplicates(self, head):
+        """
+        :type head: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        dummy = ListNode(0)
+        dummy.next = head
+        pre = dummy
+        cur = head
+        
+        while cur:
+            # 如果发现当前节点和下一个节点值相同
+            if cur.next and cur.val == cur.next.val:
+                # 记住这个值，把所有等于这个值的点都跳过
+                x = cur.val
+                while cur and cur.val == x:
+                    cur = cur.next
+                # pre 指向跳过后的第一个点（暂时连接，pre 本身不移动）
+                pre.next = cur
+            else:
+                # 如果没有重复，pre 和 cur 同时稳步前进
+                pre = cur
+                cur = cur.next
+                
+        return dummy.next
+```
+
+```
+## 复杂度
+- 时间复杂度：O(M)因为要遍历整个list
+- 空间复杂度：O(1)
