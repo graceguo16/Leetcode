@@ -1,0 +1,66 @@
+# 105. Construct BT from Pre and Inorder
+**难度**：Medium
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree
+
+Example 1:
+
+Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+Output: [3,9,20,null,null,15,7]
+
+## 思路
+-找根节点：preorder 的第一个元素永远是当前树（或子树）的根节点。
+
+- 定位切口：在 inorder 中找到这个根节点的位置（假设索引为 i）。
+
+- 划分左右：
+
+在 inorder 中，i 左边的所有数就是左子树的成员。
+
+在 inorder 中，i 右边的所有数就是右子树的成员。
+
+- 递归构建：知道了左子树有多少个成员（假设有 k 个），我们就可以去 preorder 中切出接下来的 k 个数作为左子树，剩下的作为右子树。
+
+## 代码（Python）
+
+```python
+        
+class Solution(object):
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: Optional[TreeNode]
+        """
+        if not preorder:
+            return None
+
+        # 第二步: 前序遍历的第一个就是当前的中间节点.
+        root_val = preorder[0]
+        root = TreeNode(root_val)
+
+        # 第三步: 找切割点.
+        separator_idx = inorder.index(root_val)
+
+        # 第四步: 切割inorder数组. 得到inorder数组的左,右半边.
+        inorder_left = inorder[:separator_idx]
+        inorder_right = inorder[separator_idx + 1:]
+
+        # 第五步: 切割preorder数组. 得到preorder数组的左,右半边.
+        # ⭐️ 重点1: 中序数组大小一定跟前序数组大小是相同的.
+        preorder_left = preorder[1:1 + len(inorder_left)]
+        preorder_right = preorder[1 + len(inorder_left):]
+
+        # 第六步: 递归
+        root.left = self.buildTree(preorder_left, inorder_left)
+        root.right = self.buildTree(preorder_right, inorder_right)
+        # 第七步: 返回答案
+        return root
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)height
