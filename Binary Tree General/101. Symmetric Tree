@@ -1,0 +1,71 @@
+# 101. Symmetric Tree
+**难度**：Easy
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+
+Example 1:
+
+Input: root = [1,2,2,3,4,4,3]
+Output: true
+## 思路
+- DFS用递归，基准情况：如果 $L$ 和 $R$ 都为空：对称，返回 True。
+- 如果其中一个为空，另一个不为空：不对称，返回 False。如果值不相等：不对称，返回 False。
+- 递归检查：检查 $L$ 的左边和 $R$ 的右边是否对称：check(L.left, R.right)检查 $L$ 的右边和 $R$ 的左边是否对称：check(L.right, R.left)只有两个检查都为 True，才算对称。
+- BFS每次从队列里弹出两个节点进行比较，然后按“镜像顺序”把它们的子节点塞进去。
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        if not root:
+            return True
+        
+        # 定义辅助函数进行镜像比较
+        def check(left, right):
+            # 1. 都为空，对称
+            if not left and not right:
+                return True
+            # 2. 一个为空或值不等，不对称
+            if not left or not right or left.val != right.val:
+                return False
+            
+            # 3. 关键：外侧比外侧，内侧比内侧
+            # 想象镜像：左手的左边对应右手的右边
+            return check(left.left, right.right) and check(left.right, right.left)
+            
+        return check(root.left, root.right)
+        
+class Solution(object):
+    def isSymmetric(self, root):
+        if not root:
+            return True
+            
+        # 初始放入左右两个孩子
+        queue = deque([(root.left, root.right)])
+        
+        while queue:
+            node_l, node_r = queue.popleft()
+            
+            if not node_l and not node_r:
+                continue
+            if not node_l or not node_r or node_l.val != node_r.val:
+                return False
+            
+            # 按照镜像顺序成对入队
+            queue.append((node_l.left, node_r.right)) # 外侧一对
+            queue.append((node_l.right, node_r.left)) # 内侧一对
+            
+        return True
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)height
