@@ -1,0 +1,66 @@
+# 100. Same Tree
+**难度**：Easy
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+Example 1:
+
+Input: p = [1,2,3], q = [1,2,3]
+Output: true
+
+## 思路
+- DFS用递归，base case是如果没有root就return True；如果一个空一个不为空，或者值不相同，return fasle
+- recursion：检查左边和右边
+- BFS用deque([(p,q)])，然后加入deque的东西popleft，p和q都要pop，检查是否空/值不相同
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isSameTree(self, p, q):
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """
+        # 1. 如果都为空，说明是对称的
+        if not p and not q:
+            return True
+        
+        # 2. 如果一个为空一个不为空，或者值不同，说明不对称
+        if not p or not q or p.val != q.val:
+            return False
+        
+        # 3. 递归检查左子树和右子树
+        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right
+
+        
+class Solution(object):
+    def isSameTree(self, p, q):
+        """
+        :type p: Optional[TreeNode]
+        :type q: Optional[TreeNode]
+        :rtype: bool
+        """
+        queue = deque([(p,q)])
+        while queue:
+            node_p,node_q = queue.popleft()
+
+            if not node_p and not node_q:
+                continue
+            if not node_p or not node_q or node_p.val != node_q.val:
+                return False
+            queue.append((node_p.left, node_q.left))
+            queue.append((node_p.right, node_q.right))
+            
+        return True
+```
+
+```
+## 复杂度
+- 时间复杂度：o(min(M,N)
+- 空间复杂度：o(min(M,N)
