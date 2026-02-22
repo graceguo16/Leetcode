@@ -1,0 +1,51 @@
+# 114. Flatten Binary Tree to Linked List
+**难度**：Medium
+**标签**：Linked List, Tree, DFS, BFS, Binary Tree
+
+## 题目
+Given the root of a binary tree, flatten the tree into a "linked list":
+
+The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
+The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+
+## example
+Input: root = [1,2,5,3,4,null,6]
+Output: [1,null,2,null,3,null,4,null,5,null,6]
+
+## 思路
+- 先用Preorder把它变成一个list，再用linkedlist串联起来
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def flatten(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: None Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return
+        
+        # 1. 按照前序遍历（根-左-右）把节点全部找出来
+        nodes = []
+        def preorder(node):
+            if not node:
+                return
+            nodes.append(node)
+            preorder(node.left)
+            preorder(node.right)
+        
+        preorder(root)
+        
+        # 2. 像串门一样，把它们一个个连起来
+        for i in range(1, len(nodes)):
+            prev, curr = nodes[i-1], nodes[i]
+            prev.left = None  # 左边必须为空
+            prev.right = curr # 右边指向下一个
+```
+
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
