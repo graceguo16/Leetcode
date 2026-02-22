@@ -1,0 +1,60 @@
+# 117. Populating Next Right Pointers in Each Node II
+**难度**：Medium
+**标签**：Linked List, Tree, DFS, BFS, Binary Tree
+
+## 题目
+Given a binary tree
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+## 思路
+- BFS用deque，先记录size，遍历size如果发现i<size -1就证明还不是这一层的尾巴，则连接到queue的首位
+- 然后将下一层节点入队
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def connect(self, root):
+        """
+        :type root: Node
+        :rtype: Node
+        """
+        if not root:
+            return None
+        
+        queue = deque([root])
+        
+        while queue:
+            # 当前层的节点个数
+            size = len(queue)
+            
+            # 遍历当前层
+            for i in range(size):
+                node = queue.popleft()
+                
+                # 如果不是当前层的最后一个节点，连接到队列首部节点
+                if i < size - 1:
+                    node.next = queue[0]
+                
+                # 将下一层节点入队
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+                    
+        return root
+```
+
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
