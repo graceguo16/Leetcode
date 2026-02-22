@@ -1,0 +1,82 @@
+# 112. Path Sum
+**难度**：Easy
+**标签**：Linked List, Tree, DFS, BFS, Binary Tree
+
+## 题目
+Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
+
+A leaf is a node with no children.
+
+## example
+Input: root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
+Output: true
+Explanation: The root-to-leaf path with the target sum is shown.
+
+## 思路
+- DFS:
+对于二叉树中的任意一个节点：
+
+如果节点为空：直接返回 False（因为没路了）。
+
+如果是叶子节点：判断当前节点的值是否等于剩下的 targetSum。
+
+如果是普通节点：递归地去左子树和右子树里找，看看剩下的预算能否在它们之中被消耗完。
+- BFS:在存储节点的同时，顺便存下到达该节点时所积累的路径和。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def hasPathSum(self, root, targetSum):
+        """
+        :type root: TreeNode
+        :type targetSum: int
+        :rtype: bool
+        """
+        # 1. 基准情况：空节点
+        if not root:
+            return False
+        
+        # 2. 如果是叶子节点，检查剩余值是否匹配
+        if not root.left and not root.right:
+            return root.val == targetSum
+        
+        # 3. 递归：只要左子树或右子树有一条路通，就返回 True
+        # 注意：传给子节点的 targetSum 要减去当前节点的值
+        return self.hasPathSum(root.left, targetSum - root.val) or \
+               self.hasPathSum(root.right, targetSum - root.val)
+
+class Solution(object):
+    def hasPathSum(self, root, targetSum):
+        """
+        :type root: Optional[TreeNode]
+        :type targetSum: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+        
+        # 队列里同时存节点和当前累积的和
+        queue = deque([(root, root.val)])
+        
+        while queue:
+            node, curr_sum = queue.popleft()
+            
+            # 如果是叶子节点且和等于目标值
+            if not node.left and not node.right and curr_sum == targetSum:
+                return True
+            
+            # 否则继续往下走，把路径和传下去
+            if node.left:
+                queue.append((node.left, curr_sum + node.left.val))
+            if node.right:
+                queue.append((node.right, curr_sum + node.right.val))
+                
+        return False
+
+```
+
+```
+## 复杂度
+- 时间复杂度：o(n)
+- 空间复杂度：o(n)
