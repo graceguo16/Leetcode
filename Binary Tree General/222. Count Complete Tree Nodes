@@ -1,0 +1,55 @@
+# 222. Count Complete Tree Nodes
+**难度**：Easy
+**标签**：Binary Search, Bit Manipulation Tree, Binary Tree
+## 题目
+Given the root of a complete binary tree, return the number of the nodes in the tree.
+
+According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+Design an algorithm that runs in less than O(n) time complexity.
+
+Example 1:
+
+Input: root = [1,2,3,4,5,6]
+Output: 6
+ 
+## 思路
+- 1. 核心原理：满二叉树的数学公式如果一棵二叉树是满二叉树（即每一层都填满了），那么它的节点总数可以通过高度 $h$ 直接算出：$$Nodes = 2^h - 1$$（注：这里规定根节点的高度为 1）
+- 2. 算法思路：二分思想对于一棵完全二叉树，我们可以分别向左和向右探测它的高度：左高度 ($h_L$)：从根节点一直往左走到底的深度。右高度 ($h_R$)：从根节点一直往右走到底的深度。有两种情况：情况 A：$h_L == h_R$说明这棵子树是“满”的。我们直接用公式 $2^{h_L} - 1$ 计算，不需要去数里面的节点。情况 B：$h_L \neq h_R$说明这棵子树不是满的。那我们就按照普通二叉树逻辑：$1 + \text{countNodes(左子树)} + \text{countNodes(右子树)}$。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def countNodes(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: int
+        """
+        if not root:
+            return 0 
+        left_h = 0
+        left_node = root
+        while left_node:
+            left_h += 1
+            left_node = left_node.left
+            
+        # 2. 计算右侧高度
+        right_h = 0
+        right_node = root
+        while right_node:
+            right_h += 1
+            right_node = right_node.right
+            
+        # 3. 如果左右高度相等，说明是满二叉树，直接公式计算
+        if left_h == right_h:
+            return (2 ** left_h) - 1
+            
+        # 4. 如果不等，递归计算左右子树并加上根节点 1
+        return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
