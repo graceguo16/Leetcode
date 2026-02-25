@@ -1,0 +1,55 @@
+# 102. Binary Tree Level Order Traversa
+**难度**：Medium
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[9,20],[15,7]]
+
+## 思路
+- BFS用deque append然后popleft，用一个size=len(deque)和current level.append(node)
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def levelOrder(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+        
+        res = []
+        queue = deque([root])
+        
+        while queue:
+            # 1. 确定当前这一层有多少个节点
+            size = len(queue)
+            current_level = [] # 准备一个临时的列表存这一层的值
+            
+            for i in range(size):
+                node = queue.popleft()
+                current_level.append(node.val) # 每一个都存进去，不再只存最后一个
+                
+                # 把下一层的孩子放进去
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            
+            # 2. 这一层处理完了，整层装入结果
+            res.append(current_level)
+            
+        return res
+
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
