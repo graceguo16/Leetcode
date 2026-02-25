@@ -1,0 +1,52 @@
+# 637. Average of Levels in Binary Tree
+**难度**：Medium
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given the root of a binary tree, return the average value of the nodes on each level in the form of an array. Answers within 10-5 of the actual answer will be accepted.
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [3.00000,14.50000,11.00000]
+Explanation: The average value of nodes on level 0 is 3, on level 1 is 14.5, and on level 2 is 11.
+Hence return [3, 14.5, 11].
+
+## 思路
+- BFS用deque append然后popleft，用一个size=len(deque)和s.append(node.val)
+- 遍历结束后 res.append(s / float(size))
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def averageOfLevels(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[float]
+        """
+        if not root:
+            return []
+        
+        res = []
+        queue = deque([root])
+        
+        while queue:
+            size = len(queue)
+            s = 0
+            for i in range(size):
+                node = queue.popleft()
+                s += node.val
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            res.append(s / float(size))
+        return res
+
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
