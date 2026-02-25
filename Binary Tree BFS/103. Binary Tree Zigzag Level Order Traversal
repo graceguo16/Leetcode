@@ -1,0 +1,63 @@
+# 103. Binary Tree Zigzag Level Order Traversal
+**难度**：Medium
+**标签**：Tree, DFS,BFS,Binary Tree
+
+## 题目
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[20,9],[15,7]]
+
+## 思路
+- 和之前的题一样，但是要注意奇偶：奇数从左边开始，偶数从右边开始
+- BFS用deque append然后popleft，用一个size=len(deque)和current level.append(node)
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def zigzagLevelOrder(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+        
+        res = []
+        queue = deque([root])
+        # 标记位：True 代表从左往右，False 代表从右往左
+        from_left = True
+        
+        while queue:
+            size = len(queue)
+            current_level = deque() # 使用 deque 方便从两头插入
+            
+            for _ in range(size):
+                node = queue.popleft()
+                
+                # 根据方向决定怎么放进这一层的列表
+                if from_left:
+                    current_level.append(node.val) # 放末尾
+                else:
+                    current_level.appendleft(node.val) # 放开头
+                
+                # 放入下一层的节点（队列里的顺序永远是左到右）
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            
+            # 把当前层转成普通列表存入结果
+            res.append(list(current_level))
+            # 💡 关键：翻转下一层的方向
+            from_left = not from_left
+            
+        return res
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
