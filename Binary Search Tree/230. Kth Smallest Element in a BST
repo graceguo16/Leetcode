@@ -1,0 +1,43 @@
+# 230. Kth Smallest Element in a BST
+**难度**：Medium
+**标签**：Tree, DFS,BFS,BST, Binary Tree
+
+## 题目
+Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+
+Example 1:
+
+Input: root = [3,1,4,null,2], k = 1
+Output: 1
+## 思路
+- 用BST的特点：左边小右边大，那么in order travesal下来就是按顺序，然后遍历并记录
+- 直接返回第k个数（k-1 index）
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def kthSmallest(self, root, k):
+        """
+        :type root: Optional[TreeNode]
+        :type k: int
+        :rtype: int
+        """
+        res = []
+        
+        def inorder(node):
+            if not node:
+                return
+            inorder(node.left)
+            res.append(node.val)
+            inorder(node.right)
+            
+        inorder(root)
+        # 直接返回第 k 个（索引为 k-1）
+        return res[k-1]
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
