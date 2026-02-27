@@ -1,0 +1,50 @@
+# 93. Validate Binary Search Tree
+**难度**：Medium
+**标签**：Tree, DFS,BFS,BST, Binary Tree
+
+## 题目
+Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+
+A valid BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys strictly less than the node's key.
+The right subtree of a node contains only nodes with keys strictly greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+Example 1:
+
+Input: root = [2,1,3]
+Output: true
+
+## 思路
+- 根节点可以取任何值：$(-\infty, +\infty)$。根节点的左孩子：必须落在 $(-\infty, \text{root.val})$ 之间。根节点的右孩子：必须落在 $(\text{root.val}, +\infty)$ 之间。随着递归向深层走，这个区间会越来越窄。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def isValidBST(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: bool
+        """
+        res=[]
+        def inorder(node):
+            if not node:
+                return
+            inorder(node.left)
+            res.append(node.val)
+            inorder(node.right)
+        inorder(root)
+        for i in range(len(res) - 1):
+            # 只要有一对数不满足“前一个 < 后一个”，就不是 BST
+            if res[i] >= res[i + 1]:
+                return False
+        
+        return True
+        
+```
+
+```
+## 复杂度
+- 时间复杂度：o(N)
+- 空间复杂度：o(H)
