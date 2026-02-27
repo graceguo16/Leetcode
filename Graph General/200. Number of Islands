@@ -1,0 +1,76 @@
+# 200. Number of Islands
+**难度**：Medium
+**标签**：Array, DFS,BFS, Union-Find, Matrix
+
+## 题目
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+ 
+
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+
+## 思路
+- 1. 核心思路：发现陆地，消灭岛屿
+我们的目标是数有多少个岛屿。
+
+扫描：像扫描仪一样从左到右、从上到下遍历整个地图。
+
+发现：当你碰到一个 "1"（陆地）时，说明你找到了一个新岛屿。此时，岛屿计数器 +1。
+
+消灭（重点）：为了不重复计算这个岛屿，你需要立刻把这个 "1" 以及和它相连的所有 "1" 全部变成 "0"（水）。这就好比你发现了一个岛，然后把它“沉”到水里。
+
+- 2. 怎么“沉”掉整个岛？
+当你站在一个 "1" 上时，你可以向上下左右四个方向探索。只要邻居也是 "1"，就继续把它变 "0"，直到这个岛所有的陆地都被你摸遍了。
+这通常有两种实现方式：
+
+DFS (深度优先搜索)：像走迷宫一样，认准一个方向走到底，再回来走另一条。
+
+BFS (广度优先搜索)：像涟漪一样，一层一层向外扩散。
+## 代码（Python）
+
+```python
+class Solution(object):
+    def numIslands(self, grid):
+        """
+        :type grid: List[List[str]]
+        :rtype: int
+        """
+        m = len(grid)
+        n = len(grid[0])
+
+        def dfs(i, j):
+            if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] == '0':
+                return
+            else:
+                grid[i][j] = '0'
+                dfs(i, j + 1)  # 右
+                dfs(i + 1, j)  # 下
+                dfs(i, j - 1)  # 左
+                dfs(i - 1, j) # 左
+
+        
+        num = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] =='1':
+                    num+=1
+                    dfs(i,j)
+        return num
+
+        
+```
+
+```
+## 复杂度
+- 时间复杂度：o(M*N)
+- 空间复杂度：o(M*N)
