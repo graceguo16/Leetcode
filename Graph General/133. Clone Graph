@@ -1,0 +1,79 @@
+# 133. Clone Graph
+**难度**：Medium
+**标签**：Array, DFS,BFS, Union-Find, Matrix
+
+## 题目
+Given a reference of a node in a connected undirected graph.
+
+Return a deep copy (clone) of the graph.
+
+Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
+
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}
+ 
+
+Test case format:
+
+For simplicity, each node's value is the same as the node's index (1-indexed). For example, the first node with val == 1, the second node with val == 2, and so on. The graph is represented in the test case using an adjacency list.
+
+An adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
+
+The given node will always be the first node with val = 1. You must return the copy of the given node as a reference to the cloned graph.
+
+
+## 思路
+-哈希表 (Dictionary)
+为了解决重复克隆和死循环的问题，我们需要一个“登记簿”：
+
+Key：原节点。
+
+Value：对应的克隆节点。
+
+每当你遇到一个节点：
+
+先看登记簿：“我以前克隆过这个节点吗？”
+
+如果有，直接把克隆好的那个拿出来用。
+
+如果没有，创建一个新克隆，并把它存进登记簿。
+## 代码（Python）
+
+```python
+class Solution(object):
+    def cloneGraph(self, node):
+        """
+        :type node: Node
+        :rtype: Node
+        """
+        if not node:
+            return None
+        
+        # 登记簿：老节点 -> 新节点
+        old_to_new = {}
+
+        def dfs(curr):
+            # 如果这个节点已经克隆过了，直接返回克隆后的那个
+            if curr in old_to_new:
+                return old_to_new[curr]
+            
+            # 1. 创建新节点（克隆值）
+            copy = Node(curr.val)
+            # 2. 存入登记簿
+            old_to_new[curr] = copy
+            
+            # 3. 递归克隆邻居，并把它们加到新节点的邻居列表里
+            for neighbor in curr.neighbors:
+                copy.neighbors.append(dfs(neighbor))
+                
+            return copy
+
+        return dfs(node)
+```
+
+```
+## 复杂度
+- 时间复杂度：o(V+E)V:vertices; E:edges
+- 空间复杂度：o(V)
