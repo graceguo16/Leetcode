@@ -1,0 +1,86 @@
+# 130. Surrounded Regions
+**难度**：Medium
+**标签**：Array, DFS,BFS, Union-Find, Matrix
+
+## 题目
+You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
+
+Connect: A cell is connected to adjacent cells horizontally or vertically.
+Region: To form a region connect every 'O' cell.
+Surround: A region is surrounded if none of the 'O' cells in that region are on the edge of the board. Such regions are completely enclosed by 'X' cells.
+To capture a surrounded region, replace all 'O's with 'X's in-place within the original board. You do not need to return anything.
+
+ 
+
+Example 1:
+
+Input: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+
+Output: [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+
+## 思路
+-我们可以利用你刚刚写得非常熟练的 DFS 来解决：
+
+标记安全区：
+
+遍历整个棋盘的四条边。
+
+如果你在边界上发现了一个 'O'，立刻启动 DFS，把这个 'O' 以及和它连着的 'O' 全部暂时标记为一个特殊字符（比如 'A' 或 '#'）。
+
+- 全面大清扫：
+
+遍历整个棋盘。
+
+如果是真正的 'O'（说明它没被标记过，不连通到边界），把它变成 'X'。
+
+如果是被标记过的 'A'，说明它是安全的，把它变回 'O'。
+
+## 代码（Python）
+
+```python
+class Solution(object):
+    def solve(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: None Do not return anything, modify board in-place instead.
+        """
+        ROWS, COLS = len(board), len(board[0])
+
+        def capture(r, c):
+            # 边界检查：出界或当前点不是 "O" 则停止
+            if (r < 0 or c < 0 or r == ROWS or c == COLS 
+                or board[r][c] != "O"):
+                return
+            
+            # 将与边界相连的 "O" 标记为临时状态 "T"
+            board[r][c] = "T"
+            capture(r + 1, c)
+            capture(r - 1, c)
+            capture(r, c + 1)
+            capture(r, c - 1)
+
+        # 1. (DFS) 找出所有逃生通道：从四条边界上的 "O" 开始扩散并标记为 "T"
+        for r in range(ROWS):
+            for c in range(COLS):
+                # 如果 "O" 在边界上（第一行、最后一行、第一列、最后一列）
+                if (board[r][c] == "O" and 
+                    (r in [0, ROWS - 1] or c in [0, COLS - 1])):
+                    capture(r, c)
+
+        # 2. 捕获剩下的被包围区域：依然是 "O" 的说明没法连到边界，全部变 "X"
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == "O":
+                    board[r][c] = "X"
+
+        # 3. 还原那些安全的区域：把刚才标记的 "T" 变回 "O"
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == "T":
+                    board[r][c] = "O"
+```
+
+```
+## 复杂度
+- 时间复杂度：o(M*N)
+- 空间复杂度：o(M*N)
